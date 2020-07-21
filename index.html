@@ -11,6 +11,48 @@
 
 <body>
     <div class="container">
+        <div class="addNew">
+            <div class="col-span-8">
+                <!-- remind me to -->
+                <input placeholder="remind me to..">
+                <hr class="col-span-8">
+            </div>
+
+            <!-- set the time (hours) -->
+            <div class="col-span-2">
+                <label for="hours">hrs
+                    <select name="hours" id="" required>
+                        <option  value="1">2</option>
+                    </select>
+                </label>
+            </div>
+
+            <!-- set the time (minutes) -->
+            <div class="col-span-2">
+                <label for="minutes">min
+                    <select name="minutes" id="" required>
+                        <option  value="1">2</option>
+                    </select>
+                </label>
+            </div>
+
+            <!-- set the time(seconds) -->
+            <div class="col-span-2">
+                <label for="seconds">sec
+                    <select name="seconds" id="" required>
+                        <option  value="1">1</option>
+                        <option  value="2">2</option>
+                        <option  value="3">3</option>
+
+                    </select>
+                </label>
+            </div>
+
+            <button class="col-span-2">start</button>
+
+        </div>
+
+        <!-- display the countdown -->
         <div data-countDownContainer class="countDownContainer">
             <div data-display class="updateDisplay">
                 10:45
@@ -22,9 +64,9 @@
                 <button data-stop class="stopButton">Stop</button>
                 <button data-restart>Restart</button>
             </div>
-        </div>
+            </>
 
-    </div>
+        </div>
 
 </body>
 

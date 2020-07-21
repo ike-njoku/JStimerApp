@@ -1,6 +1,6 @@
 body,
 html {
-    /*  */
+    /* remove defaults  */
     padding: 0px;
     margin: 0px;
     width: 300px;
@@ -14,8 +14,19 @@ html {
     justify-content: center;
     text-align: center;
     margin: auto;
-    border: solid;
-    padding: 1%;
+    border: solid #9A9A9A 2px;
+    padding: 1px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
+/* addNew */
+
+.addNew {
+    padding: 2%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 
@@ -26,17 +37,62 @@ html {
 }
 
 
+/* column spans */
+
+.col-span-1 {
+    grid-column: span 1;
+}
+
+.col-span-2 {
+    grid-column: span 2;
+}
+
+.col-span-3 {
+    grid-column: span 3;
+}
+
+.col-span-4 {
+    grid-column: span 4;
+}
+
+.col-span-5 {
+    grid-column: span 5;
+}
+
+.col-span-8 {
+    grid-column: span 8;
+}
+
+
 /* buttons */
 
-button {
+button,
+input,
+select,
+label {
+    margin-bottom: 3%;
     cursor: pointer;
     border: none;
     outline: none;
-    padding: 1%;
+    padding: 3%;
+}
+
+
+/* select */
+
+select {
+    border-radius: 10px;
+    border: solid 1px gainsboro;
+}
+
+button {
+    border-radius: 5px;
+    background-color: gainsboro;
 }
 
 button:hover {
     background-color: #144653;
+    color: white;
 }
 
 .startButton {

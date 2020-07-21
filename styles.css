@@ -1,0 +1,48 @@
+body,
+html {
+    /*  */
+    padding: 0px;
+    margin: 0px;
+    width: 300px;
+}
+
+
+/* container */
+
+.container {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+    border: solid;
+    padding: 1%;
+}
+
+
+/* update Display */
+
+.updateDisplay {
+    font-size: 800%;
+}
+
+
+/* buttons */
+
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 1%;
+}
+
+button:hover {
+    background-color: #144653;
+}
+
+.startButton {
+    background-color: #F9E719;
+}
+
+.stopButton {
+    background-color: #F0402D;
+}

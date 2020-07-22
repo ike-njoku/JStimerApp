@@ -11,18 +11,17 @@
 
 <body>
     <div class="container">
-        <div class="addNew">
+        <div data-addNew class="addNew">
             <div class="col-span-8">
                 <!-- remind me to -->
-                <input placeholder="remind me to..">
+                <input data-titleForm placeholder="remind me to..">
                 <hr class="col-span-8">
             </div>
 
             <!-- set the time (hours) -->
             <div class="col-span-2">
                 <label for="hours">hrs
-                    <select name="hours" id="" required>
-                        <option  value="1">2</option>
+                    <select data-setTime data-selectHrs name="hours" id="" required>
                     </select>
                 </label>
             </div>
@@ -30,8 +29,7 @@
             <!-- set the time (minutes) -->
             <div class="col-span-2">
                 <label for="minutes">min
-                    <select name="minutes" id="" required>
-                        <option  value="1">2</option>
+                    <select data-setTime data-selectMin name="minutes" id="" required>
                     </select>
                 </label>
             </div>
@@ -39,27 +37,23 @@
             <!-- set the time(seconds) -->
             <div class="col-span-2">
                 <label for="seconds">sec
-                    <select name="seconds" id="" required>
-                        <option  value="1">1</option>
-                        <option  value="2">2</option>
-                        <option  value="3">3</option>
-
+                    <select data-setTime data-selectSec name="seconds" id="" required>
                     </select>
                 </label>
             </div>
 
-            <button class="col-span-2">start</button>
+            <button data-start class="col-span-2">start</button>
 
         </div>
 
         <!-- display the countdown -->
         <div data-countDownContainer class="countDownContainer">
+            <div data-title class="title"></div>
             <div data-display class="updateDisplay">
-                10:45
+                59:10:45
             </div>
-
             <div class="controls">
-                <button datas-start class="startButton">Start</button>
+                <hr>
                 <button data-pause>Pause</button>
                 <button data-stop class="stopButton">Stop</button>
                 <button data-restart>Restart</button>

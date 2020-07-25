@@ -28,9 +28,9 @@
  .addNew input {
      font-size: large;
  }
- /* update Display */
+ /* screen */
  
- .updateDisplay {
+ .screen {
      font-size: 500%;
  }
  /* column spans */

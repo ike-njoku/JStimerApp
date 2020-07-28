@@ -37,9 +37,8 @@ const timesetters = document.querySelectorAll('[data-setTime]');
 // select seconds
 const selectSec = document.querySelector('[data-selectSec]');
 
-// set the time interval
-var timeInterval = 1000;
-
+// sound to play when the timer has executed
+const audio = new Audio('/Alarm.mp3');
 
 
 // dynamically generate number of seconds and minutes (1-60)
@@ -70,152 +69,239 @@ timesetters.forEach(timeSetter => {
 //hide countdownContainer by default
 countDownContainer.style.display = 'none';
 
-
-// dynamically create hours, minutes and secnds
-
-
-// create the timer class that contains all timer methods
+// create a timer class with methods/functions in it
 class Timer {
 
-    // reset the counter parameters/display parameters
+    // add New -- create new timer
+    addNew() {
 
+        // validate input
+        if (titleForm.value.length < 1) { window.alert('please ensure your timer has a title'); return; }
+        if (parseInt(selectHrs.value + selectMin.value + selectSec.value) < 1) { window.alert('invalid time set'); return; }
 
-    // start a new countDown/Timer
-    countDown(hours, minutes, seconds) {
-        this.hours = parseInt(hours);
-        this.minutes = parseInt(minutes);
-        this.seconds = parseInt(seconds);
+        // define parameters
+        this.title = titleForm.value;
+        this.hours = selectHrs.value;
+        this.minutes = selectMin.value;
+        this.seconds = selectSec.value;
 
-        //subtract one from the second
+        this.timeLeft = this.hours + ':' + this.minutes + ':' + this.seconds;
+
+        // convert the set time to milliseconds and store it in a variable to
+        this.elapseTime = (this.hours * 60 * 60 * 1000) + (this.minutes * 60 * 1000) + (this.seconds * 1000);
+        // set an expirey date for the timer
+        let date = new Date();
+
+        let expireyDate = date.toUTCString(date.setTime(date.getTime() + this.elapseTime));
+
+        // create a cookie to store the title and expirey date of the countdown
+        // the cookie would be read by the updateDisplay function and written to by the  tountDown function
+        document.cookie = this.title + '=' + this.timeLeft + '; expires =' + expireyDate;
+
+        // call the updateDisplay method/function to display the details of the countdown before starting the countdown
+        this.updateDisplay();
+        start = setInterval(() => {
+            timer.countDown()
+        }, 1000);
+
+    }
+
+    //  do the actual countdown
+    countDown() {
+        // get the hours and minutes and seconds from the timeleft
+        // convert to numbers because the cookie saves them as strings
+        this.hours = parseInt(this.timeLeft.split(':')[0]);
+        this.minutes = parseInt(this.timeLeft.split(':')[1]);
+        this.seconds = parseInt(this.timeLeft.split(':')[2]);
+
+        // decrement the second
         this.seconds = this.seconds - 1;
 
         // set limits
         if (this.seconds < 1) {
-
-            this.minutes = this.minutes - 1;
+            // decrease the minute
+            this.minutes -= 1;
+            // return this.second to 59
             this.seconds = 59;
-            if (this.minutes < 1) {
-                this.hours = this.hours - 1;
-                this.minutes = 59;
-            }
 
+            if (this.minutes < 1) {
+                this.hours -= 1;
+                this.minutes = 59;
+
+                if (this.hours < 0) {
+                    this.hours = 0;
+                    this.seconds = 0;
+                    this.minutes = 0;
+
+                    this.stop();
+                }
+            }
+        }
+        // redeclare the value of the time left (confer addNew())
+        this.timeLeft = this.hours + ':' + this.minutes + ':' + this.seconds;
+
+        let date = new Date();
+        // subtract one second from the elapse time because this second is called every 1 second
+        let expireyDate = date.toUTCString(date.setTime(date.getTime() + (this.elapseTime - 1000)));
+
+        document.cookie = this.title + '=' + this.timeLeft + '; expires =' + expireyDate;
+
+        // update the display
+        this.updateDisplay();
+
+
+
+    }
+
+
+
+    // pause the countdown
+    pause() {
+        if (pauseButton.innerHTML == 'Pause') {
+            pauseButton.innerHTML = 'Resume';
+            clearInterval(start);
+        } else {
+            pauseButton.innerHTML = 'Pause';
+            start = setInterval(() => {
+                timer.countDown()
+            }, 1000);
         }
 
 
-        // if (this.hours == -1) {
-        //     this.hours = 0;
-        //     this.minutes = 0;
-        //     this.seconds = 0;
-        // }
-
-
-        // convert the hours and minutes and seconds back to strings so that
-        // it can be processed (confer this.updateDisplay)
-        this.seconds = this.seconds.toString();
-        this.minutes = this.minutes.toString();
-        this.hours = this.hours.toString();
-
-
-
-
-        // if the countdown has reached Zero
-        this.updateDisplay(this.hours, this.minutes, this.seconds);
-
-
-
-
-        // else this.stop();
 
 
     }
 
 
 
-    // pause the countdown/timer
-    pause() {}
-
-
-    // stop/cancel the running timer/countdown
-    stop() {
-        window.alert(titleForm.value);
-        // timeInterval = -1000;
-    }
 
     // update the display
-    updateDisplay(hours, minutes, seconds) {
+    updateDisplay() {
+        //if a timer cookie is set,  display  the content of the cookie
+        if (document.cookie.length) {
+            // split the cookie to obtain the values
+            // title
+            this.title = document.cookie.split('=')[0];
+            // set the time left to an empty array
+            this.timeLeft = '';
 
-        // if these parameters are passed from the click of the start button
-        if (hours, minutes, seconds) {
+            // split the time left to get this.hours, minutes and seconds
+            let timeFormat = document.cookie.split('=')[1].split(':');
 
-            this.hours = hours;
-            this.minutes = minutes;
-            this.seconds = seconds;
+            timeFormat.map(i => {
+                if (i.length < 2) i = '0' + i;
+
+                // push the corrected time format into the timeLeft array
+
+                // this would add a column at the  end of each item and would cause an extra column at the end of the time format
+                this.timeLeft += i + ':';
+
+            });
+
+
+
+
+            // hide the addNew container
+            addNewContainer.style.display = 'none';
+
+            // display the countdownTimerContainer(which contains the screen , confer index.html )
+            countDownContainer.style.display = 'grid';
+
+            // remove the extra column at the end of the time format
+
+            this.timeLeft = this.timeLeft.slice(0, -1);
+
+            displayScreen.innerHTML = this.timeLeft;
+            titleDisplay.innerHTML = this.title;
+
+
+        } else {
+
+            // reset the values input parameters
+            titleForm.value = '';
+            selectHrs.value = 0;
+            selectMin.value = 0;
+            selectSec.value = 0;
+
+            // hide the countDown Timer Display
+            addNewContainer.style.display = 'grid';
+            countDownContainer.style.display = 'none';
         }
 
-        // using an array add zeroes befor each number if the number length is less than 2 (ie 00:00:00)
-        // create a timeformat array who's content will be displayed;
-        let updatedTimeFormat = [];
 
-        let rawTimeFormat = [this.hours, this.minutes, this.seconds];
-        rawTimeFormat.map((timeItem) => {
-            if (timeItem.length < 2) timeItem = '0' + timeItem;
-            // push the new timeItem into the updated timeformat array
-            updatedTimeFormat.push(timeItem);
-        });
+    }
+
+    // stop the countdown
+    stop(restart) {
+        // play a sound if the timer was completed or the stop button clicked rather thatn the restart button
+        if (!restart) audio.play();
 
 
-
-        // display the title on the top of the countdown timer screen
-        titleDisplay.innerHTML = titleForm.value;
-
-
-        // reasign the parameters
-        this.hours = updatedTimeFormat[0];
-        this.minutes = updatedTimeFormat[1];
-        this.seconds = updatedTimeFormat[2];
+        // make the cookie expire
+        this.elapseTime = -50000;
+        let date = new Date();
+        let expireyDate = date.toUTCString(date.setTime(date.getTime() + this.elapseTime));
+        document.cookie = this.title + '=' + this.timeLeft + '; expires =' + expireyDate;
 
 
-        // display the time;
-        displayScreen.innerHTML = this.hours + ':' + this.minutes + ':' + this.seconds;
+        clearInterval(start);
 
-        // hide the addNew container
-        addNewContainer.style.display = 'none';
 
+
+        // output (set set a time out so that it will display after the alarm)
+        if (!restart) {
+            setTimeout(() => {
+                window.alert('count down completed for  ' + this.title);
+
+            }, 700);
+        }
+
+        // call the update display method/function to hide the countdown container;
+
+        if (restart) {
+            this.title = titleForm.value;
+            this.hours = selectHrs.value;
+            this.minutes = selectMin.value;
+            this.seconds = selectSec.value;
+
+            this.addNew();
+        }
+
+        this.updateDisplay();
     }
 
 
 }
 
-const timer = new Timer();
 
 // attach functions
+// create an instance of the timer class
+const timer = new Timer();
 
-
-// validateInput function( called by start and restart button clicks)
-const validateInput = function(title) {
-    title = titleForm.value;
-    hours = selectHrs.value;
-    minutes = selectMin.value;
-    seconds = selectSec.value;
-
-
-    if (title) {
-        timer.updateDisplay(hours, minutes, seconds);
-        countDownContainer.style.display = 'grid';
-        // srtart the timer if the screen is countDown screen is displayed
-
-        if (countDownContainer.style.display == 'grid') {
-            setInterval(() => {
-                timer.countDown(timer.hours, timer.minutes, timer.seconds);
-            }, timeInterval);
-        }
-    } else window.alert('please add a title to your reminder');
-};
-
-
-
+var start;
 
 // startButton
-startButton.addEventListener('click', () => validateInput());
-// restart
-restartButton.addEventListener('click', () => validateInput());
+startButton.addEventListener('click', () => timer.addNew());
+
+// pause Button
+pauseButton.addEventListener('click', () => timer.pause());
+
+
+// stop button
+stopBotton.addEventListener('click', () => timer.stop());
+
+// restart button (pass a parameter to the stop method and decide which actions to take in the stop function)
+restartButton.addEventListener('click', function() {
+    let restart = true;
+    timer.stop(restart)
+});
+
+
+// if the window was closed and reopened, continue the countdown from where it stopped
+if (document.cookie) {
+    timer.updateDisplay();
+    start = setInterval(() => {
+        timer.countDown()
+    }, 1000);
+
+}

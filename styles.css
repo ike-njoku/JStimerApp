@@ -72,6 +72,10 @@
  }
  /* select */
  
+ button {
+     padding: 3%;
+ }
+ 
  select {
      border-radius: 10px;
      border: solid 1px gainsboro;

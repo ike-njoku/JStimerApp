@@ -120,22 +120,18 @@ class Timer {
         // set limits
         if (this.seconds < 1) {
             // decrease the minute
+
+
             this.minutes -= 1;
+            if (this.hours == 0) this.minutes = 0;
+
+            if (this.minutes < 0) this.minutes = 59;
+
             // return this.second to 59
             this.seconds = 59;
 
-            if (this.minutes < 1) {
-                this.hours -= 1;
-                this.minutes = 59;
-
-                if (this.hours < 0) {
-                    this.hours = 0;
-                    this.seconds = 0;
-                    this.minutes = 0;
-
-                    this.stop();
-                }
-            }
+            // if the cookie has been depleted
+            if (document.cookie == '') this.stop();
         }
         // redeclare the value of the time left (confer addNew())
         this.timeLeft = this.hours + ':' + this.minutes + ':' + this.seconds;
